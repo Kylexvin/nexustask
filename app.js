@@ -1,13 +1,13 @@
-const express = require('express'); 
-const mongoose = require('mongoose'); 
-const morgan = require('morgan'); 
-const bodyParser = require('body-parser'); 
-const methodOverride = require('method-override'); 
+const express = require('express');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 const session = require('express-session'); // Import session
-const taskRoutes = require('./routes/taskRoutes'); 
+const taskRoutes = require('./routes/taskRoutes');
 const authRoutes = require('./routes/authRoutes'); // Import auth routes
 
-const app = express(); 
+const app = express();
 
 // MongoDB connection URI
 const dbURI = process.env.MONGODB_URI || "mongodb+srv://vinny:Test1234@nodetuts.twc4m.mongodb.net/tasks?retryWrites=true&w=majority"; // Use environment variable or default URI
@@ -15,23 +15,24 @@ const dbURI = process.env.MONGODB_URI || "mongodb+srv://vinny:Test1234@nodetuts.
 // Connect to MongoDB
 mongoose.connect(dbURI)
   .then(result => app.listen(process.env.PORT || 3000, () => console.log(`Server running on port ${process.env.PORT || 3000}`)))
-  .catch(err => console.log(err)); 
+  .catch(err => console.log(err));
 
 // Middleware
-app.use(express.static('public')); 
-app.use(bodyParser.urlencoded({ extended: true })); 
-app.use(morgan('dev')); 
-app.use(methodOverride('_method')); 
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+app.use(methodOverride('_method'));
 app.use(session({ 
-  secret: 'your_secret_key', 
-  resave: false, 
+  secret: 'your_secret_key', // Replace with a secure key
+  resave: false,
   saveUninitialized: false 
-})); 
-app.set('view engine', 'ejs'); 
+}));
+
+app.set('view engine', 'ejs');
 
 // Root route
 app.get('/', (req, res) => {
-  res.redirect('/tasks'); 
+  res.redirect('/tasks'); // Redirect to tasks on root
 });
 
 // Routes
@@ -41,4 +42,10 @@ app.use('/tasks', taskRoutes);
 // Handle 404 errors
 app.use((req, res) => {
   res.status(404).render('404'); // Ensure you have a 404.ejs view
+});
+
+// Debugging Middleware (optional)
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log the error stack
+  res.status(500).send('Something broke!'); // Handle internal server error
 });

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
@@ -13,7 +14,7 @@
             padding: 0;
             height: 100%;
             font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(45deg, #000428, #004e92);
+            background: linear-gradient(45deg, #1d2b64, #f8cdda);
             color: #fff;
             overflow: hidden;
         }
@@ -41,7 +42,7 @@
             text-align: center;
             margin-bottom: 30px;
             font-size: 2.5em;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
         }
 
         .form-group {
@@ -53,10 +54,9 @@
             width: 100%;
             padding: 15px;
             border: none;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             color: #fff;
-            font-family: 'Orbitron', sans-serif;
             transition: all 0.3s ease;
         }
 
@@ -66,7 +66,7 @@
         }
 
         .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .icon {
@@ -74,7 +74,7 @@
             top: 50%;
             right: 15px;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .btn-register {
@@ -83,7 +83,6 @@
             border: none;
             background: linear-gradient(90deg, #00d2ff, #3a7bd5);
             color: #fff;
-            font-family: 'Orbitron', sans-serif;
             font-weight: bold;
             font-size: 1.1em;
             border-radius: 10px;
@@ -96,18 +95,18 @@
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
         }
 
-        .login-link {
+        .register-link {
             text-align: center;
             margin-top: 20px;
         }
 
-        .login-link a {
+        .register-link a {
             color: #00d2ff;
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
-        .login-link a:hover {
+        .register-link a:hover {
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
         }
 
@@ -119,23 +118,13 @@
             margin-bottom: 20px;
             text-align: center;
         }
-
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
     </style>
 </head>
 <body>
     <div class="register-container">
-        <div class="particles" id="particles-js"></div>
         <div class="register-box">
-            <h1>Register</h1>
-            <% if (locals.error) { %>
+            <h1>Create Account</h1>
+            <% if (error) { %>
                 <div class="error-message"><%= error %></div>
             <% } %>
             <form action="/auth/register" method="POST">
@@ -149,30 +138,10 @@
                 </div>
                 <button type="submit" class="btn-register">Register</button>
             </form>
-            <div class="login-link">
+            <div class="register-link">
                 <a href="/auth/login">Already have an account? Login</a>
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        particlesJS("particles-js", {
-            particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: "#ffffff" },
-                shape: { type: "circle" },
-                opacity: { value: 0.5, random: true },
-                size: { value: 3, random: true },
-                line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
-                move: { enable: true, speed: 3, direction: "none", random: true, straight: false, out_mode: "out" }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" } },
-                modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
-            },
-            retina_detect: true
-        });
-    </script>
 </body>
 </html>
