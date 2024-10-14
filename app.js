@@ -7,16 +7,13 @@ const session = require('express-session');
 const taskRoutes = require('./routes/taskRoutes');
 const authRoutes = require('./routes/authRoutes');
 
-// Load environment variables from .env file
-require('dotenv').config();
-
 const app = express();
 
-// MongoDB connection URI from environment variable
-const dbURI = process.env.MONGODB_URI;
+// MongoDB connection URI directly in the code
+const dbURI = 'mongodb+srv://vinny:Test1234@nodetuts.twc4m.mongodb.net/tasks?retryWrites=true&w=majority';
 
 // Connect to MongoDB
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(dbURI)
   .then(() => {
     console.log('Connected to MongoDB');
     // Start the server once connected to MongoDB
@@ -34,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
 app.use(session({ 
-  secret: process.env.SESSION_SECRET, // Use secret from environment variable
+  secret: 'your-secret-key', // Replace with your actual session secret
   resave: false,
   saveUninitialized: false 
 }));

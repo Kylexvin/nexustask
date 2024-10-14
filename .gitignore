@@ -13,3 +13,4 @@ yarn-error.log*
 
 # Ignore Vercel's local `.vercel` folder (if any)
 .vercel/
+.vercel
