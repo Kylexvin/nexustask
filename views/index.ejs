@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, #000428, #004e92);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .welcome-message {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: #00d2ff;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .task-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .task-item h2 {
+            margin-top: 0;
+            color: #00d2ff;
+        }
+
+        .task-item p {
+            margin: 10px 0;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-complete {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            color: #fff;
+        }
+
+        .btn-complete:hover:not(:disabled) {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+
+        .btn-complete:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-delete {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            box-shadow: 0 0 10px rgba(255, 75, 43, 0.7);
+        }
+
+        .btn-create {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            background: linear-gradient(90deg, #00f260, #0575e6);
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            padding: 15px;
+        }
+
+        .btn-create:hover {
+            background: linear-gradient(90deg, #0575e6, #00f260);
+            box-shadow: 0 0 20px rgba(5, 117, 230, 0.7);
+        }
+
+        .btn-logout {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            box-shadow: 0 0 10px rgba(255, 75, 43, 0.7);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background-color: #ffd700;
+            color: #000;
+        }
+
+        .status-completed {
+            background-color: #00fa9a;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <% if (user) { %>
+                <div class="welcome-message">Welcome back, <%= user.username %>!</div>
+            <% } %>
+            <h1><%= title %></h1>
+            <a href="/auth/logout" class="btn btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+        <ul class="task-list">
+            <% tasks.forEach(task => { %>
+                <li class="task-item">
+                    <h2><%= task.title %></h2>
+                    <p><%= task.description %></p>
+                    <p><strong>Category:</strong> <%= task.category %></p>
+                    <p><strong>Status:</strong> 
+                        <span class="status <%= task.completed ? 'status-completed' : 'status-pending' %>">
+                            <%= task.completed ? 'Completed' : 'Pending' %>
+                        </span>
+                    </p>
+                    <div class="task-actions">
+                        <form onsubmit="completeTask('<%= task._id %>', event)" class="task-form">
+                            <button type="submit" class="btn btn-complete" <%= task.completed ? 'disabled' : '' %>>
+                                <i class="fas fa-check"></i> Mark as Complete
+                            </button>
+                        </form>
+                        <form onsubmit="deleteTask('<%= task._id %>', event)" class="task-form">
+                            <button type="submit" class="btn btn-delete">
+                                <i class="fas fa-trash"></i> Delete Task
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+        <a href="/tasks/create" class="btn btn-create">
+            <i class="fas fa-plus"></i> Create a New Task
+        </a>
+    </div>
+
+    <script>
+        async function deleteTask(id, event) {
+            event.preventDefault();
+            const response = await fetch(`/tasks/${id}`, { method: 'DELETE' });
+            const data = await response.json();
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        }
+
+        async function completeTask(id, event) {
+            event.preventDefault();
+            const response = await fetch(`/tasks/${id}/complete`, { method: 'PATCH' });
+            const data = await response.json();
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        }
+    </script>
+</body>
+</html>
